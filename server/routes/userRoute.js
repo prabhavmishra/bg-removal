@@ -3,6 +3,7 @@ import { clerkWebhooks } from '../controllers/userController.js'
 
 const userRouter = express.Router()
 
-userRouter.post('/webhooks', clerkWebhooks)
+// Webhook endpoint needs raw body for signature verification
+userRouter.post('/webhooks', express.raw({ type: 'application/json' }), clerkWebhooks)
 
 export default userRouter
