@@ -16,6 +16,9 @@ const connectDB = async () => {
     if (!cached.promise) {
         const opts = {
             bufferCommands: false,
+            maxPoolSize: 10,
+            serverSelectionTimeoutMS: 5000,
+            socketTimeoutMS: 45000,
         };
 
         cached.promise = mongoose.connect(`${process.env.MONGODB_URI}/Removo`, opts).then((mongoose) => {
@@ -23,6 +26,7 @@ const connectDB = async () => {
             return mongoose;
         }).catch((error) => {
             cached.promise = null;
+            console.error("MongoDB connection error:", error.message);
             throw error;
         });
     }
