@@ -12,18 +12,12 @@ app.use(cors())
 
 // Debug middleware to log all requests
 app.use((req, res, next) => {
-    console.log(`${req.method} ${req.path} - Headers:`, Object.keys(req.headers))
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`)
+    console.log('Registered routes check - userRouter:', typeof userRouter)
     next()
 })
 
-// API routes - webhook route needs raw body, so we handle it before json parser
-app.use('/api/user', userRouter)
-console.log('Routes registered: /api/user/*')
-
-// JSON parser for other routes (after webhook route)
-app.use(express.json())
-
-//API routes
+// Root route first
 app.get('/', async (req, res)=> {
     try {
         await connectDB()
@@ -33,19 +27,29 @@ app.get('/', async (req, res)=> {
     }
 })
 
-// Direct test route (not using router)
+// Direct test route BEFORE router (to test if direct routes work)
 app.get('/api/user/test-direct', (req, res) => {
+    console.log('Direct route hit!')
     res.json({ message: 'Direct route works', path: req.path })
 })
 
+// API routes - webhook route needs raw body, so we handle it before json parser
+// Register router BEFORE json parser to ensure raw body for webhooks
+app.use('/api/user', userRouter)
+console.log('Routes registered: /api/user/*')
+
+// JSON parser for other routes (after webhook route)
+app.use(express.json())
+
 // Catch-all for undefined routes (must be last)
 app.use((req, res) => {
+    console.log(`404 - ${req.method} ${req.path} not found`)
     res.status(404).json({ 
         error: 'Route not found', 
         path: req.path, 
         method: req.method,
         message: `Cannot ${req.method} ${req.path}`,
-        availableRoutes: ['/', '/api/user/test', '/api/user/webhooks (POST only)']
+        availableRoutes: ['/', '/api/user/test', '/api/user/test-direct', '/api/user/webhooks (POST only)']
     })
 })
 
