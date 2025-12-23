@@ -33,6 +33,11 @@ app.get('/', async (req, res)=> {
     }
 })
 
+// Direct test route (not using router)
+app.get('/api/user/test-direct', (req, res) => {
+    res.json({ message: 'Direct route works', path: req.path })
+})
+
 // Catch-all for undefined routes (must be last)
 app.use((req, res) => {
     res.status(404).json({ 

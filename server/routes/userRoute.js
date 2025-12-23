@@ -5,7 +5,8 @@ const userRouter = express.Router()
 
 // Test route to verify router is working
 userRouter.get('/test', (req, res) => {
-    res.json({ message: 'User router is working', path: '/api/user/test' })
+    console.log('Test route hit!', req.path)
+    res.json({ message: 'User router is working', path: req.path, timestamp: new Date().toISOString() })
 })
 
 // Webhook endpoint needs raw body for signature verification
