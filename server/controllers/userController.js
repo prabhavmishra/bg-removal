@@ -1,10 +1,14 @@
 import { Webhook } from "svix"
 import userModel from "../models/userModel.js"
+import connectDB from "../configs/mongodb.js"
 
 // API Controller function to manage clerk user with database
 // http://localhost:4000/api/user/webhooks
 const clerkWebhooks = async(req,res)=> {
     try {
+        // Ensure database connection
+        await connectDB()
+        
         // Get raw body and headers for webhook verification
         const payload = req.body.toString()
         const svixHeaders = {

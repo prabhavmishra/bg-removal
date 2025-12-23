@@ -11,13 +11,16 @@ const app= express()
 app.use(express.json())
 app.use(cors())
 
-// Connect to database
-connectDB().catch(error => {
-    console.error("Database connection failed:", error.message)
+//API routes
+app.get('/', async (req, res)=> {
+    try {
+        await connectDB()
+        res.send("API Working")
+    } catch (error) {
+        res.status(500).send("Database connection error")
+    }
 })
 
-//API routes
-app.get('/', (req, res)=> res.send("API Working"))
 app.use('/api/user', userRouter)
 
 // Export for Vercel serverless
