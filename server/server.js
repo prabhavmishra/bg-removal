@@ -10,8 +10,15 @@ const app= express()
 //Initialize Middleware
 app.use(cors())
 
+// Debug middleware to log all requests
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.path} - Headers:`, Object.keys(req.headers))
+    next()
+})
+
 // API routes - webhook route needs raw body, so we handle it before json parser
 app.use('/api/user', userRouter)
+console.log('Routes registered: /api/user/*')
 
 // JSON parser for other routes (after webhook route)
 app.use(express.json())
@@ -26,18 +33,14 @@ app.get('/', async (req, res)=> {
     }
 })
 
-// Test endpoint to verify routing works
-app.get('/api/user/test', (req, res) => {
-    res.json({ message: 'User API route is working', path: req.path })
-})
-
-// Catch-all for undefined routes
+// Catch-all for undefined routes (must be last)
 app.use((req, res) => {
     res.status(404).json({ 
         error: 'Route not found', 
         path: req.path, 
         method: req.method,
-        message: `Cannot ${req.method} ${req.path}`
+        message: `Cannot ${req.method} ${req.path}`,
+        availableRoutes: ['/', '/api/user/test', '/api/user/webhooks (POST only)']
     })
 })
 
