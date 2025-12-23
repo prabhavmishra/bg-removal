@@ -26,6 +26,21 @@ app.get('/', async (req, res)=> {
     }
 })
 
+// Test endpoint to verify routing works
+app.get('/api/user/test', (req, res) => {
+    res.json({ message: 'User API route is working', path: req.path })
+})
+
+// Catch-all for undefined routes
+app.use((req, res) => {
+    res.status(404).json({ 
+        error: 'Route not found', 
+        path: req.path, 
+        method: req.method,
+        message: `Cannot ${req.method} ${req.path}`
+    })
+})
+
 // Export for Vercel serverless
 export default app
 
