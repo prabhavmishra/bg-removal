@@ -8,8 +8,13 @@ import userRouter from './routes/userRoute.js'
 const app= express()
 
 //Initialize Middleware
-app.use(express.json())
 app.use(cors())
+
+// API routes - webhook route needs raw body, so we handle it before json parser
+app.use('/api/user', userRouter)
+
+// JSON parser for other routes (after webhook route)
+app.use(express.json())
 
 //API routes
 app.get('/', async (req, res)=> {
@@ -20,8 +25,6 @@ app.get('/', async (req, res)=> {
         res.status(500).send("Database connection error")
     }
 })
-
-app.use('/api/user', userRouter)
 
 // Export for Vercel serverless
 export default app
