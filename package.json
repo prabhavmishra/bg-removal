@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@clerk/clerk-react": "^5.58.1",
-    "@tailwindcss/vite": "^4.1.18",
-    "tailwindcss": "^4.1.18"
-  }
-}
