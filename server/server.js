@@ -19,4 +19,5 @@ app.use('/api/user', userRouter)
 
 app.listen(PORT, ()=> console.log("Server running on port"+PORT))
 
-console.log("redeploy test");
+console.log("Redeploy trigger", new Date().toISOString());
+
