@@ -18,3 +18,5 @@ app.get('/',(req,res)=> res.send("API working"))
 app.use('/api/user', userRouter)
 
 app.listen(PORT, ()=> console.log("Server running on port"+PORT))
+
+console.log("redeploy test");
